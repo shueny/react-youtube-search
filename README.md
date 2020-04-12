@@ -15,3 +15,5 @@ In the project directory, you can run:
 - [youtube api v3](https://developers.google.com/youtube/v3/docs/search/list)
 
 > ※ API_KEY 使用次數可能已盡，需要自己產生另一組。
+
+<img src="./src/assets/init-page.jpg" width="600px">

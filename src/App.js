@@ -46,14 +46,24 @@ export default class App extends React.Component {
   loadData = endpoint => {
     const { todosPerPage } = this.state;
     fetch(endpoint)
-      .then(result => result.json())
       .then(result => {
-        const _totalPages = result.items.length / todosPerPage;
-        this.setState({
-          video: result,
-          allVideos: result.items,
-          totalPages: _totalPages
-        });
+        if (result.status >= 200 && result.status < 300) {
+          const _totalPages =
+            result.items.length > 0 ? result.items.length / todosPerPage : 0;
+          this.setState({
+            video: result,
+            allVideos: result.items,
+            totalPages: _totalPages
+          });
+        } else {
+          if (result.status === 403) {
+            alert(
+              "Daily Limit Exceeded. The quota will be reset at midnight Pacific Time (PT). You may monitor your quota usage and adjust limits in the API Console: https://console.developers.google.com/apis/api/youtube.googleapis.com/quotas?project=578507554944"
+            );
+          } else {
+            alert("OOPS! Someting wrong, please try again later.");
+          }
+        }
       })
       .catch(err => {
         alert(err);
