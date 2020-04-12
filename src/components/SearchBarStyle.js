@@ -3,9 +3,13 @@ import styled from 'styled-components';
 export const SearchWrapper = styled.div `
         margin: 50px 0 35px;
         text-align: center;
+        display: inline-flex;
+        width: 100%;
+        justify-content: center;
+        cursor: initial;
 
         .searchform {
-            display: inline-block;
+            display: inline-flex;
             position: relative;
             left: 0;
             right: 0;
@@ -38,7 +42,6 @@ export const SearchWrapper = styled.div `
                     -webkit-appearance: none;
                 }
 
-                /* clears the 'X' from Internet Explorer */
                 &::-ms-clear {
                     display: none;
                     width: 0;
@@ -51,7 +54,6 @@ export const SearchWrapper = styled.div `
                     height: 0;
                 }
 
-                /* clears the 'X' */
                 &::-webkit-search-decoration,
                 &::-webkit-search-cancel-button,
                 &::-webkit-search-results-button,
@@ -61,7 +63,7 @@ export const SearchWrapper = styled.div `
 
                 &:focus {
                     background-color: transparent;
-                    color: #fff;
+                    color: #424949;
                     cursor: auto;
                     padding: 3px 0;
                 }
@@ -78,8 +80,7 @@ export const SearchWrapper = styled.div `
         button[type="submit"] {
             background-color: rgba(0, 0, 0, 0);
             border: medium none;
-            color: #fff;
-            cursor: pointer;
+            color: #424949;
             height: 30px;
             line-height: 1;
             float: right;

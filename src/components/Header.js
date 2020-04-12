@@ -1,5 +1,5 @@
 import React from "react";
-import { HeaderWrapper } from "./HeaderStyle.js";
+import { HeaderWrapper, Title } from "./HeaderStyle.js";
 
 export default class Header extends React.Component {
   constructor(props) {
@@ -8,6 +8,10 @@ export default class Header extends React.Component {
   }
 
   render() {
-    return <HeaderWrapper> This is Header. </HeaderWrapper>;
+    return (
+      <HeaderWrapper>
+        <Title> {this.props.title} </Title>{" "}
+      </HeaderWrapper>
+    );
   }
 }

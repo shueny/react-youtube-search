@@ -1,62 +1,113 @@
-import React from "react";
-import axios from "axios";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import Header from "./components/Header";
 import SearchBar from "./components/SearchBar";
 import VideoList from "./components/VideoList";
+import YTSearch from "youtube-api-search";
+import ReactPaginate from "react-paginate";
+import { API_URL, API_KEY } from "./config";
+import { PaginationWrapper } from "./components/PaginationStyle";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import "./App.css";
 
-const URL = "https://www.googleapis.com/youtube/v3/search";
-const API_TOKEN = "AIzaSyBKYFGvFdL1hn1NHXIbt9apRShM0CTbErk";
 export default class App extends React.Component {
+  static propTypes = {
+    url: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    perPage: PropTypes.number.isRequired
+  };
+
   constructor(props) {
     super(props);
-    this.state = { maxResults: 10, video: [], allVideos: [], currentPage: 1 };
+    this.state = {
+      maxResults: 50,
+      type: "video",
+      video: [],
+      allVideos: [],
+      searchTerm: "",
+      currentPage: 0,
+      totalPages: 0,
+      todosPerPage: 10,
+      upperPageBound: 3,
+      lowerPageBound: 0,
+      isPrevBtnActive: "disabled",
+      isNextBtnActive: "",
+      pageBound: 3
+    };
   }
 
   componentDidMount() {
-    const { maxResults, video, allVideos } = this.state;
-    axios
-      .get(
-        URL +
-          "?part=snippet&maxResults=" +
-          maxResults +
-          "&q=&type=video&key=" +
-          API_TOKEN,
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          }
-        }
-      )
-      .then(({ data }) => {
-        console.log(data);
-        this.setState({
-          video: data,
-          allVideos: data.items
-        });
-      })
-      .catch(err => {});
+    const { maxResults } = this.state;
+    const endpoint = `${API_URL}?part=snippet&maxResults=${maxResults}&q=&type=video&key=${API_KEY}`;
+    this.loadData(endpoint);
   }
 
-  onKeyUp = e => {
-    const { allVideos } = this.state;
-    // console.log(e.target.value);
-    // console.log(allVideos.items);
-    const post = allVideos.filter(
-      item => console.log(item)
-      // item.title.rendered.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    this.setState({ post });
+  loadData = endpoint => {
+    const { todosPerPage } = this.state;
+    fetch(endpoint)
+      .then(result => result.json())
+      .then(result => {
+        const _totalPages = result.items.length / todosPerPage;
+        this.setState({
+          video: result,
+          allVideos: result.items,
+          totalPages: _totalPages
+        });
+      })
+      .catch(err => {
+        alert(err);
+      });
+  };
+
+  handleKeyUp = e => {
+    YTSearch({ key: API_KEY, term: e }, videos => {
+      this.setState({
+        videos: videos,
+        allVideos: videos.items,
+        searchTerm: e
+      });
+    });
+  };
+
+  handlePageClick = data => {
+    const { maxResults } = this.state;
+    let selected = data.selected;
+    let offset = Math.ceil(selected * this.props.perPage);
+    const endpoint = `${API_URL}?part=snippet&maxResults=${maxResults}&q=&type=video&key=${API_KEY}`;
+
+    this.setState({ offset: offset, currentPage: selected }, () => {
+      this.loadData(endpoint);
+    });
   };
 
   render() {
-    const { allVideos } = this.state;
+    const { allVideos, todosPerPage, currentPage } = this.state;
+    const startItem = currentPage * todosPerPage;
+    const endItem = startItem + todosPerPage;
+    const _videoShow = allVideos.slice(startItem, endItem);
     return (
       <div className="App">
-        <Header />
-        <SearchBar onChange={this.onKeyUp} />
-        <VideoList allVideos={allVideos} />
+        <Header title="Search Video From Youtube " />
+        <SearchBar onKeyup={this.handleKeyUp} />
+        <VideoList allVideos={_videoShow} />
+        {allVideos.length > todosPerPage && (
+          <PaginationWrapper>
+            <ReactPaginate
+              previousLabel={<FontAwesomeIcon icon={faAngleLeft} />}
+              nextLabel={<FontAwesomeIcon icon={faAngleRight} />}
+              breakLabel={"..."}
+              breakClassName={"break-me"}
+              pageCount={this.state.totalPages}
+              marginPagesDisplayed={0}
+              pageRangeDisplayed={2}
+              onPageChange={this.handlePageClick}
+              containerClassName={"pagination"}
+              subContainerClassName={"pages pagination"}
+              activeClassName={"active"}
+            />
+          </PaginationWrapper>
+        )}
       </div>
     );
   }

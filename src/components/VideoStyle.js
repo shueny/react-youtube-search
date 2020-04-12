@@ -10,7 +10,7 @@ export const VideoListsWrapper = styled.div `
 export const VideoItemWrapper = styled.ul `
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-wrap: wrap;
     list-style: none;
     padding: 0;
@@ -18,8 +18,15 @@ export const VideoItemWrapper = styled.ul `
 
 
 export const VideoItem = styled.li `
-    width: 30%;
+    width: 33%;
     display: inline-flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     list-style: none;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+
+    @media screen and (max-width: 992px) {
+        width: 50%;
+    }
 `;

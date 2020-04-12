@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-undef */
 import React from "react";
 import { VideoItem } from "./VideoStyle";
 
@@ -11,20 +10,24 @@ export default class VideoListItem extends React.Component {
   render() {
     const { video } = this.props;
     const imageUrl = video.snippet.thumbnails.medium.url;
-
+    const videoUrl = `https://www.youtube.com/watch?v=${video.id.videoId}`;
     return (
-      <VideoItem
-        // onClick={() => props.onVideoSelect(video)}
-        className='list-group-item'>
-        <div className='video-list media'>
-          <div className='media-left'>
-            <img src={imageUrl} className='media-object' />
-          </div>
+      <VideoItem className='list-group-item'>
+        <a href={videoUrl} target='_blank'>
+          <div className='video-list media'>
+            <div className='media-left'>
+              <img
+                src={imageUrl}
+                className='media-object'
+                alt='youtube video'
+              />
+            </div>
 
-          <div className='media-body'>
-            <div className='media-heading'>{video.snippet.title}</div>
+            <div className='media-body'>
+              <div className='media-heading'>{video.snippet.title}</div>
+            </div>
           </div>
-        </div>
+        </a>
       </VideoItem>
     );
   }

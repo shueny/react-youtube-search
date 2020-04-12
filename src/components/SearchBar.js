@@ -6,10 +6,20 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 export default class SearchBar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      term: ""
+    };
+
+    this.onInputChange = this.onInputChange.bind(this);
+  }
+
+  onInputChange(e) {
+    this.setState({ term: e.target.value });
+    this.props.handleSearchClick(e.target.value);
   }
 
   render() {
+    const { term } = this.state;
     return (
       <SearchWrapper>
         <form
@@ -17,18 +27,20 @@ export default class SearchBar extends React.Component {
           method="get"
           id="searchform"
           className="searchform"
-          action="">
+          action=""
+          onSubmit={this.onInputChange.bind(this)}>
           <input
             type="search"
-            onChange={this.props.onChange}
+            onChange={this.onInputChange}
             name="s"
             id="s"
-            placeholder="Search"
+            placeholder="熱門音樂"
+            value={term}
           />
-          <button type="submit" id="searchsubmit">
-            <FontAwesomeIcon icon={faSearch} />
-          </button>
         </form>
+        <button type="submit" id="searchsubmit">
+          <FontAwesomeIcon icon={faSearch} />{" "}
+        </button>
       </SearchWrapper>
     );
   }
