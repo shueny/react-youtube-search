@@ -13,3 +13,5 @@ In the project directory, you can run:
 - React.js
 - [react-paginate plugin](https://github.com/AdeleD/react-paginate)
 - [youtube api v3](https://developers.google.com/youtube/v3/docs/search/list)
+
+> ※ API_KEY 使用次數可能已盡，需要自己產生另一組。
